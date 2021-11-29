@@ -12,10 +12,10 @@ import (
 )
 
 // BotStatsURL is url for sending stats
-const BotStatsURL = "https://top.gg/api/bots/%d/stats"
+const BotStatsURL = "https://top.gg/api/bots/%s/stats"
 
 // SendStats sends bot stats to top.gg
-func SendStats(manager *dshardmanager.Manager, token string) {
+func SendStats(manager *dshardmanager.Manager, token string) (err error) {
 	data := make(map[string]interface{})
 	data["server_count"] = manager.GetFullStatus().NumGuilds
 
@@ -30,6 +30,9 @@ func SendStats(manager *dshardmanager.Manager, token string) {
 		fmt.Sprintf(BotStatsURL, manager.Session(0).State.User.ID),
 		bytes.NewBuffer(b),
 	)
+	if err != nil {
+		return
+	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", token)
 
@@ -45,4 +48,6 @@ func SendStats(manager *dshardmanager.Manager, token string) {
 	if resp.StatusCode != http.StatusOK {
 		log.Println(resp.Status)
 	}
+
+	return nil
 }
