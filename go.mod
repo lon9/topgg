@@ -1,4 +1,4 @@
-module github.com/lon9/topgg/v2
+module github.com/lon9/topgg
 
 go 1.17
 
